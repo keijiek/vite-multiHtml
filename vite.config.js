@@ -3,22 +3,26 @@ import { resolve } from 'path';
 import { readdirSync } from 'fs';
 
 // プロジェクトルート下のHTMLファイルを動的に取得
-const getHtmlFiles = () => {
+function getHtmlFiles() {
   const files = readdirSync(resolve(__dirname, 'src'));
   return files.filter(file => file.endsWith('.html')).reduce((entries, file) => {
     const name = file.replace('.html', '');
-    entries[name] = resolve(__dirname, file);
+    entries[name] = resolve(__dirname, 'src', file);
     return entries;
   }, {});
 };
 
 export default defineConfig({
   root: resolve(__dirname, 'src'),
-  base: './',
+  base: '/',
   publicDir: resolve(__dirname, 'public'),
   build: {
+    outDir: resolve(__dirname, 'dist'),
+    emptyOutDir: true,
+    minify: true,
+    sourcemap: false,
     rollupOptions: {
-      input: getHtmlFiles()
+      input:getHtmlFiles(),
     }
   },
   css: {
